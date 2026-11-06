@@ -1,5 +1,7 @@
-# Tarea 1: mantiene despierto el proyecto de Supabase "proyectosrapiprestamos".
-name: Keep Supabase Alive - proyectosrapiprestamos
+# Tarea 1: mantiene despierta la base de datos de Supabase.
+# El plan gratis de Supabase pausa el proyecto si pasa 7 días sin uso;
+# esta tarea hace una consulta pequeña cada 2 días para que nunca llegue a 7.
+name: Keep Supabase Alive
 
 on:
   schedule:
@@ -12,7 +14,7 @@ jobs:
     steps:
       - name: Consultar la base
         run: |
-          # -S muestra el número de error (401, 404) si algo falla
-          curl -sSf --retry 3 --max-time 30 \
+          # Consulta la tabla keep_alive con la URL y la llave guardadas en Secrets
+          curl -sf --retry 3 --max-time 30 \
             "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive?select=id&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_KEY }}"

@@ -1,0 +1,18 @@
+# Tarea 1: mantiene despierto el proyecto de Supabase "proyectosrapiprestamos".
+name: Keep Supabase Alive - proyectosrapiprestamos
+
+on:
+  schedule:
+    - cron: "0 12 */2 * *"   # cada 2 días, 7am Panamá
+  workflow_dispatch:          # botón para probarla a mano
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar la base
+        run: |
+          # -S muestra el número de error (401, 404) si algo falla
+          curl -sSf --retry 3 --max-time 30 \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_KEY }}"

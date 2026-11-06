@@ -1,23 +1,24 @@
+# Tarea 2: mantiene "activo" el repositorio.
+# GitHub apaga las tareas programadas si un repo público pasa 60 días sin cambios;
+# esta tarea guarda la fecha en un archivo una vez al mes, así nunca llega a 60.
 name: Mantener repo activo
-
-# Hace un commit pequeño una vez al mes para que GitHub
-# no apague las tareas programadas por inactividad (regla de 60 días).
 
 on:
   schedule:
     - cron: "0 13 1 * *"   # día 1 de cada mes, 8am Panamá
-  workflow_dispatch:
+  workflow_dispatch:        # botón para probarla a mano
 
 permissions:
-  contents: write
+  contents: write           # permiso para guardar el cambio en el repo
 
 jobs:
   commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
       - name: Registrar actividad
         run: |
+          # Escribe la fecha en un archivo y la guarda en el repo (commit + push)
           date -u +"%Y-%m-%d %H:%M UTC" > .github/ultima-actividad.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
